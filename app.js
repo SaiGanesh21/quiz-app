@@ -1,28 +1,39 @@
-const form = document.querySelector('.signup-form');
-const feedback = document.querySelector('.feedback');
-const usernamePattern = /^[a-zA-Z]{6,12}$/;
+const correctAnswers = ['B', 'A', 'A', 'B'];
+const form = document.querySelector('.quiz-form');
+const result = document.querySelector('.result');
 
-// validation
+
 form.addEventListener('submit', e => {
-  e.preventDefault();
+  e.preventDefault();//prevents default page refreshing
 
-  const username =  form.username.value;
+  let score = 0;
+  const userAnswers = [form.q1.value, form.q2.value, form.q3.value, form.q4.value]
+  //now have the values the user enters inside above array
 
-  if(usernamePattern.test(username)){
-    feedback.textContent = 'that username is valid!'
-  } else {
-    feedback.textContent = 'username must contain only letters & be between 6 & 12 characters';
-  }
+  //check answers
+    userAnswers.forEach((answer, index)=> {
+      if(answer === correctAnswers[index]){
+        score += 25;
+      }
+    })
+    //showing results
+    scrollTo(0,0);//two arguments, x and y coordinates (0,0,) is top left
+    //result.querySelector('span').textContent = `${score}%`;//showing score in percentage
+    result.classList.remove('d-none');
+
+    let output = 0;
+    const timer = setInterval(() => {
+      result.querySelector('span').textContent = `${output}%`;
+      if (output === score){
+        clearInterval(timer);
+      }else{
+        output++;
+      }
+    },10);
+
+
 });
 
-// live feedback
-form.username.addEventListener('keyup', e => {
-  // console.log(e.target.value, form.username.value);
-  if(usernamePattern.test(e.target.value)){
-    //console.log('passed');
-    form.username.setAttribute('class', 'success');
-  } else {
-    //console.log('failed');
-    form.username.setAttribute('class', 'error');
-  }
-})
+//display score on top of page when user presses submit
+//when user presses submit, score is calculated, then displayed. 
+
